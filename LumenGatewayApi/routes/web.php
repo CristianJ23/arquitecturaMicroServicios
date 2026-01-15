@@ -21,12 +21,25 @@
     $router->patch('/authors/{author}', 'AuthorController@update');
     $router->delete('/authors/{author}', 'AuthorController@destroy');
 
-    /**
-     * Books routes
-     */
-    $router->get('/books', 'BookController@index');
-    $router->post('/books', 'BookController@store');
-    $router->get('/books/{book}', 'BookController@show');
-    $router->put('/books/{book}', 'BookController@update');
-    $router->patch('/books/{book}', 'BookController@update');
-    $router->delete('/books/{book}', 'BookController@destroy');
+
+$router->group(['prefix' => 'books'], function () use ($router) {
+    $router->get('/', 'BookController@index');
+    $router->post('/', 'BookController@store');
+    $router->get('/{book}', 'BookController@show');
+    $router->put('/{book}', 'BookController@update');
+    $router->patch('/{book}', 'BookController@update');
+    $router->delete('/{book}', 'BookController@destroy');
+});
+
+$router->get('/test', function () {
+    return 'Gateway routes are working!';
+});
+
+$router->group(['prefix' => 'payments'], function () use ($router) {
+    $router->post('/', 'PaymentController@processPayment');
+    $router->get('/{id}', 'PaymentController@getPayment');
+    $router->get('/order/{order_id}', 'PaymentController@getPaymentsByOrder');
+    $router->post('/{id}/refund', 'PaymentController@processRefund');
+    $router->get('/user/{user_id}', 'PaymentController@getPaymentsByUser');
+});
+
